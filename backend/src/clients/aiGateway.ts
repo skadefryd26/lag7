@@ -3,6 +3,7 @@ type GatewayBody = {
   instructions: string;
   input: string;
   stream: boolean;
+  reasoning?: { effort: "low" | "medium" | "high" };
 };
 
 type ResponseContent = { type: string; text?: string };
@@ -19,6 +20,7 @@ const MODEL = "gpt-5.6-luna";
 export async function callAIGateway(
   instructions: string,
   input: string,
+  valg: { tenketid?: "low" | "medium" | "high" } = {},
 ): Promise<string> {
   const token = process.env.AI_GATEWAY_TOKEN;
   if (!token) {
@@ -32,6 +34,7 @@ export async function callAIGateway(
     instructions,
     input,
     stream: false,
+    ...(valg.tenketid ? { reasoning: { effort: valg.tenketid } } : {}),
   };
 
   const res = await fetch(ENDPOINT, {
