@@ -109,3 +109,9 @@ li {
     transition-duration: 0.001ms !important;
   }
 }
+
+.skadeskisse svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}

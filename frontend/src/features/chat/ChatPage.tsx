@@ -22,6 +22,7 @@ import type { ChatResponse, ChatTurn, Valg } from "./types";
 import { BelopGraf } from "./BelopGraf";
 import { PengeRegn } from "./PengeRegn";
 import { LuguberLoader } from "./LuguberLoader";
+import { Skadeskisse } from "../skisse/Skadeskisse";
 
 const kr = new Intl.NumberFormat("no-NO", {
   style: "currency",
@@ -321,6 +322,8 @@ export function ChatPage() {
                     </Text>
                   )}
                 </Text>
+
+                <Skadeskisse beskrivelse={hero} />
 
                 {kvittering ? (
                   <Kvittering kvittering={kvittering} />
