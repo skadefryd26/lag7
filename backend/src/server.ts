@@ -26,5 +26,5 @@ app.use("/api/chat", chatRouter);
 
 const port = Number(process.env.PORT ?? 8787);
 app.listen(port, () => {
-  console.log(`Bjarne Maks backend kjører på http://localhost:${port}`);
+  console.log(`Forsikringsplyndreren backend kjører på http://localhost:${port}`);
 });
