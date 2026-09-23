@@ -17,7 +17,7 @@ import {
 } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { chatMedBjarne } from "./api";
+import { chatMedAgent } from "./api";
 import type { ChatResponse, ChatTurn, Valg } from "./types";
 import { BelopGraf } from "./BelopGraf";
 import { PengeRegn } from "./PengeRegn";
@@ -131,12 +131,12 @@ export function ChatPage() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const mutation = useMutation<ChatResponse, Error, string>({
-    mutationFn: (m) => chatMedBjarne(historikk, m, belop || undefined),
+    mutationFn: (m) => chatMedAgent(historikk, m, belop || undefined),
     onSuccess: (data, m) => {
       setHistorikk((h) => [
         ...h,
         { role: "kunde", text: m },
-        { role: "bjarne", text: data.svar, tips: data.tips, valg: data.valg },
+        { role: "agent", text: data.svar, tips: data.tips, valg: data.valg },
       ]);
       setHero(data.heroforklaring);
       setKommentar(data.kommentar);
@@ -208,10 +208,10 @@ export function ChatPage() {
                 order={1}
                 style={{ fontSize: 34, lineHeight: 1.05, color: "#e7d9d6" }}
               >
-                Bjarne Maks — chat
+                Forsikringsplyndreren
               </Title>
               <Text c="dimmed" size="sm" mt={2}>
-                Fortell hva som skjedde. Bjarne makser mens du snakker.
+                Fortell hva som skjedde. Vi makser mens du snakker.
               </Text>
             </div>
           </Group>
@@ -236,8 +236,8 @@ export function ChatPage() {
                 <Stack gap="sm" pr="sm">
                   {historikk.length === 0 && !mutation.isPending && (
                     <Text c="dimmed" size="sm" fs="italic" py="md">
-                      Bjarne: «Ja ja. Fortell hva som skjedde, så skal jeg se hva
-                      jeg kan gjøre. Etter kaffen.»
+                      «Ja ja. Fortell hva som skjedde, så skal vi se hva vi kan
+                      gjøre. Etter kaffen.»
                     </Text>
                   )}
                   {historikk.map((t, i) => (
@@ -265,7 +265,7 @@ export function ChatPage() {
               <Group gap="sm" mt="md" align="flex-end" className="chat-luguber-inputrow">
                 <Textarea
                   style={{ flex: 1 }}
-                  placeholder="Skriv til Bjarne …"
+                  placeholder="Skriv til agenten …"
                   autosize
                   minRows={1}
                   maxRows={4}
@@ -285,7 +285,7 @@ export function ChatPage() {
                   loading={mutation.isPending}
                   disabled={melding.trim().length === 0}
                   onClick={send}
-                  className="bjarne-button"
+                  className="agent-button"
                 >
                   Send
                 </Button>
@@ -316,7 +316,7 @@ export function ChatPage() {
                 >
                   {hero || (
                     <Text component="span" c="dimmed" fs="italic">
-                      Bjarne bygger den perfekte skadeforklaringen her mens dere
+                      Vi bygger den perfekte skadeforklaringen her mens dere
                       chatter.
                     </Text>
                   )}
@@ -330,7 +330,7 @@ export function ChatPage() {
                     mt="md"
                     color="blood"
                     radius={12}
-                    className="bjarne-button"
+                    className="agent-button"
                     disabled={!hero}
                     onClick={() => setKvittering(lagKvittering(belop))}
                   >
@@ -615,7 +615,7 @@ function Boble({
       >
         {!kunde && (
           <Text size="xs" fw={700} c="#c96b6f" mb={6}>
-            Bjarne
+            Forsikringsplyndreren
           </Text>
         )}
         {kunde && turn.text}

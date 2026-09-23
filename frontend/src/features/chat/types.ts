@@ -5,7 +5,7 @@ export type Valg = {
 };
 
 export type ChatTurn = {
-  role: "kunde" | "bjarne";
+  role: "kunde" | "agent";
   text: string;
   tips?: string[];
   valg?: Valg[];

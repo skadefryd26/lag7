@@ -44,7 +44,7 @@ li {
   color: #2a1c0a;
 }
 
-.bjarne-button {
+.agent-button {
   transition:
     transform 160ms var(--ease-out),
     box-shadow 200ms var(--ease-out);
@@ -54,15 +54,15 @@ li {
     0 2px 6px rgba(20, 12, 4, 0.18),
     0 8px 20px rgba(20, 12, 4, 0.15);
 }
-.bjarne-button:hover:not(:disabled) {
+.agent-button:hover:not(:disabled) {
   transform: translateY(-1px);
 }
-.bjarne-button:active:not(:disabled) {
+.agent-button:active:not(:disabled) {
   transform: scale(0.97);
   transition-duration: 120ms;
 }
 
-@keyframes bjarne-sigh {
+@keyframes agent-sigh {
   0%,
   100% {
     opacity: 0.55;
@@ -73,11 +73,11 @@ li {
     transform: translateY(-2px);
   }
 }
-.bjarne-sighing {
-  animation: bjarne-sigh 1400ms var(--ease-in-out) infinite;
+.agent-sighing {
+  animation: agent-sigh 1400ms var(--ease-in-out) infinite;
 }
 
-/* Luguber innskrivingsfelt på chat-siden med Bjarne. */
+/* Luguber innskrivingsfelt på chat-siden. */
 .chat-luguber-inputrow textarea {
   background-color: #140d10 !important;
   border-color: rgba(255, 255, 255, 0.28) !important;
@@ -96,7 +96,7 @@ li {
 .luguber-side :is(h1, h2, h3, h4) {
   color: #f2e7e5;
 }
-.luguber-side .bjarne-button:disabled {
+.luguber-side .agent-button:disabled {
   background-color: #3a2228;
   color: #c3b2b5;
 }
