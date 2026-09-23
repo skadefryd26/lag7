@@ -11,7 +11,6 @@ dotenv.config({ path: path.join(prosjektRot, ".env") });
 dotenv.config({ path: ".env.local" });
 dotenv.config();
 import express from "express";
-import { maksRouter } from "./features/maks/routes.js";
 import { chatRouter } from "./features/chat/routes.js";
 
 const app = express();
@@ -21,7 +20,6 @@ app.get("/api/health", (_req, res) => {
   res.json({ ok: true });
 });
 
-app.use("/api/maks", maksRouter);
 app.use("/api/chat", chatRouter);
 
 const port = Number(process.env.PORT ?? 8787);
