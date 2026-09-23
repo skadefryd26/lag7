@@ -49,6 +49,71 @@ function erStortHopp(delta: number, forrige: number): boolean {
   return delta >= 40000 || (forrige > 0 && delta / forrige >= 0.25);
 }
 
+type KvitteringData = {
+  saksnummer: string;
+  belop: number;
+  kommentar: string;
+};
+
+const KVITTERINGSKOMMENTARER = [
+  "Sendt. Jeg har satt den øverst i bunken. Ikke fortell skadeavdelingen at det var meg.",
+  "Sendt. Saksbehandleren som får denne kommer til å trenge kaffe. Mye kaffe.",
+  "Sendt. Jeg brukte fire sekunder. Avdelingen ville brukt fire uker.",
+  "Sendt. Hvis noen spør, var det du som skrev den.",
+];
+
+function lagKvittering(belop: number): KvitteringData {
+  const nummer = Math.floor(100000 + Math.random() * 900000);
+  return {
+    saksnummer: `SKD-2026-${nummer}`,
+    belop,
+    kommentar:
+      KVITTERINGSKOMMENTARER[
+        Math.floor(Math.random() * KVITTERINGSKOMMENTARER.length)
+      ],
+  };
+}
+
+function Kvittering({ kvittering }: { kvittering: KvitteringData }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <Box
+        mt="md"
+        style={{
+          borderRadius: 14,
+          padding: "12px 14px",
+          background: "#241419",
+          border: "1px solid rgba(255,255,255,0.12)",
+        }}
+      >
+        <Group justify="space-between" align="baseline" mb={4}>
+          <Text size="xs" fw={700} c="dimmed" tt="uppercase">
+            Saksnummer
+          </Text>
+          <Text size="sm" fw={700} className="tabular">
+            {kvittering.saksnummer}
+          </Text>
+        </Group>
+        <Group justify="space-between" align="baseline">
+          <Text size="xs" fw={700} c="dimmed" tt="uppercase">
+            Krav sendt inn
+          </Text>
+          <Text size="sm" fw={700} className="tabular" style={{ color: "#e2555f" }}>
+            {kr.format(kvittering.belop)}
+          </Text>
+        </Group>
+        <Text size="sm" fs="italic" c="dimmed" mt={10}>
+          “{kvittering.kommentar}”
+        </Text>
+      </Box>
+    </motion.div>
+  );
+}
+
 export function ChatPage() {
   const [historikk, setHistorikk] = useState<ChatTurn[]>([]);
   const [melding, setMelding] = useState("");
@@ -62,6 +127,7 @@ export function ChatPage() {
   const [fengselKommentar, setFengselKommentar] = useState("");
   const [regn, setRegn] = useState(false);
   const [sisteInnsendt, setSisteInnsendt] = useState("");
+  const [kvittering, setKvittering] = useState<KvitteringData | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const mutation = useMutation<ChatResponse, Error, string>({
@@ -78,6 +144,7 @@ export function ChatPage() {
       setSvikBegrunnelse(data.svikBegrunnelse);
       setFengselAar(data.fengselAar);
       setFengselKommentar(data.fengselKommentar);
+      setKvittering(null);
 
       const forrige = belop;
       setBelop(data.belop);
@@ -117,6 +184,7 @@ export function ChatPage() {
       theme={{ colors: { blood }, primaryColor: "blood", primaryShade: 6 }}
     >
       <Box
+        className="luguber-side"
         style={{
           position: "relative",
           minHeight: "100vh",
@@ -240,7 +308,7 @@ export function ChatPage() {
                 }}
               >
                 <Text size="xs" fw={700} c="dimmed" tt="uppercase" mb={6}>
-                  Maks-forklaring
+                  Beskrivelse til skademelding
                 </Text>
                 <Text
                   style={{ lineHeight: 1.55, minHeight: 60 }}
@@ -253,6 +321,22 @@ export function ChatPage() {
                     </Text>
                   )}
                 </Text>
+
+                {kvittering ? (
+                  <Kvittering kvittering={kvittering} />
+                ) : (
+                  <Button
+                    fullWidth
+                    mt="md"
+                    color="blood"
+                    radius={12}
+                    className="bjarne-button"
+                    disabled={!hero}
+                    onClick={() => setKvittering(lagKvittering(belop))}
+                  >
+                    Send inn skademelding
+                  </Button>
+                )}
               </Card>
 
               <Card
