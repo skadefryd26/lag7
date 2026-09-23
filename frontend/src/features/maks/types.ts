@@ -4,4 +4,6 @@ export type MaksResponse = {
   kommentar: string;
   svikSannsynlighet: number;
   svikBegrunnelse: string;
+  fengselAar: number;
+  fengselKommentar: string;
 };

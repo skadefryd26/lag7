@@ -269,6 +269,11 @@ function BjarneSvar({ data }: { data: MaksResponse }) {
           begrunnelse={data.svikBegrunnelse}
         />
 
+        <FengselMeter
+          aar={data.fengselAar}
+          kommentar={data.fengselKommentar}
+        />
+
         <Card
           radius={14}
           p="md"
@@ -382,6 +387,87 @@ function SvikMeter({
         </Box>
         <Text size="sm" c="dimmed" mt={10} fs="italic">
           {begrunnelse}
+        </Text>
+      </Box>
+    </motion.div>
+  );
+}
+
+function fengselNiva(aar: number): { label: string; color: string; emoji: string } {
+  if (aar < 0.5) return { label: "Fri som fuglen", color: "#4a7c59", emoji: "🕊️" };
+  if (aar < 2) return { label: "Bot og bedring", color: "#c39150", emoji: "💸" };
+  if (aar < 5) return { label: "Noen år på skyggesiden", color: "#c25c3a", emoji: "⛓️" };
+  if (aar < 10) return { label: "Lang dom", color: "#a83232", emoji: "🚔" };
+  return { label: "Livstid light", color: "#7a1f1f", emoji: "🔒" };
+}
+
+// Skalaen topper på 15 år (parodi-maks).
+const FENGSEL_MAKS = 15;
+
+function FengselMeter({ aar, kommentar }: { aar: number; kommentar: string }) {
+  const niva = fengselNiva(aar);
+  const prosent = Math.min(100, (aar / FENGSEL_MAKS) * 100);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.28, delay: 0.44, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <Box
+        style={{
+          padding: 16,
+          borderRadius: 16,
+          background: "#fffdf8",
+          border: "1px solid rgba(20,12,4,0.08)",
+          boxShadow: "var(--shadow-sm)",
+        }}
+      >
+        <Group justify="space-between" align="center" mb={10}>
+          <Group gap={8}>
+            <Text style={{ fontSize: 20 }}>{niva.emoji}</Text>
+            <div>
+              <Text size="xs" c="dimmed" tt="uppercase" style={{ letterSpacing: 1 }}>
+                Antatt straff (beløp × svik)
+              </Text>
+              <Text fw={700} style={{ color: niva.color }}>
+                {niva.label}
+              </Text>
+            </div>
+          </Group>
+          <Text
+            fw={800}
+            className="tabular"
+            style={{ fontSize: 28, color: niva.color, lineHeight: 1 }}
+          >
+            {aar.toLocaleString("no-NO")}
+            <Text component="span" fw={600} size="sm" c="dimmed" ml={4}>
+              år
+            </Text>
+          </Text>
+        </Group>
+        <Box
+          style={{
+            position: "relative",
+            height: 10,
+            borderRadius: 999,
+            background: "#f0e4d1",
+            overflow: "hidden",
+          }}
+        >
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${prosent}%` }}
+            transition={{ duration: 0.9, delay: 0.52, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              height: "100%",
+              background:
+                "linear-gradient(90deg, #4a7c59 0%, #c39150 40%, #c25c3a 70%, #7a1f1f 100%)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.25)",
+            }}
+          />
+        </Box>
+        <Text size="sm" c="dimmed" mt={10} fs="italic">
+          {kommentar}
         </Text>
       </Box>
     </motion.div>
