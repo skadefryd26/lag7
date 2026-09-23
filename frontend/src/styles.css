@@ -115,3 +115,37 @@ li {
   height: auto;
   display: block;
 }
+
+/* Skissen tegnes: et svakt lysstrøk som vandrer over flaten. */
+@keyframes skisse-strok {
+  0% {
+    background-position: -140% 0;
+  }
+  100% {
+    background-position: 240% 0;
+  }
+}
+.skisse-tegnes {
+  background:
+    linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0.02) 30%,
+      rgba(255, 255, 255, 0.07) 50%,
+      rgba(255, 255, 255, 0.02) 70%
+    ),
+    rgba(255, 255, 255, 0.015);
+  background-size: 220% 100%;
+  animation: skisse-strok 2200ms var(--ease-in-out) infinite;
+}
+.skisse-tegnes-paa-nytt {
+  animation: skisse-puls 2200ms var(--ease-in-out) infinite;
+}
+@keyframes skisse-puls {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
