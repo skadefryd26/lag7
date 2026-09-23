@@ -22,7 +22,7 @@ const SCENER: { nokkelord: string[]; scene: Scene }[] = [
       bakgrunn:
         "radial-gradient(circle at 50% 40%, #2a1608 0%, #140c04 70%, #050301 100%)",
       tekster: [
-        "Bjarne studerer bulkene i måneskinnet …",
+        "Vi studerer bulkene i måneskinnet …",
         "Et vrak. Vakkert, på sitt vis.",
         "Han teller skrapene. Alle teller.",
       ],
@@ -36,7 +36,7 @@ const SCENER: { nokkelord: string[]; scene: Scene }[] = [
       bakgrunn:
         "radial-gradient(circle at 50% 40%, #301010 0%, #160707 70%, #060202 100%)",
       tekster: [
-        "Bjarne hører ekkoet av et hjul som ruller alene …",
+        "Vi hører ekkoet av et hjul som ruller alene …",
         "Asfalten husker alt.",
         "Han noterer: «tapt frihet — erstattes i kroner».",
       ],
@@ -51,7 +51,7 @@ const SCENER: { nokkelord: string[]; scene: Scene }[] = [
         "radial-gradient(circle at 50% 40%, #241a2e 0%, #110b17 70%, #050208 100%)",
       tekster: [
         "En hest vrinsker et sted i tåka …",
-        "Bjarne kondolerer. Så regner han.",
+        "Vi kondolerer. Så regner vi.",
         "Manken var forsikret. Selvsagt.",
       ],
     },
@@ -65,7 +65,7 @@ const SCENER: { nokkelord: string[]; scene: Scene }[] = [
         "radial-gradient(circle at 50% 40%, #1a1f12 0%, #0d1008 70%, #030401 100%)",
       tekster: [
         "Vinden uler gjennom et knust vindu …",
-        "Bjarne går gjennom ruinene med lommelykt.",
+        "Vi går gjennom ruinene med lommelykt.",
         "Hver sprekk i veggen har en pris.",
       ],
     },
@@ -79,7 +79,7 @@ const SCENER: { nokkelord: string[]; scene: Scene }[] = [
         "radial-gradient(circle at 50% 40%, #0a1c26 0%, #050f15 70%, #010507 100%)",
       tekster: [
         "Noe synker langsomt i det mørke vannet …",
-        "Bjarne speider ut over den kalde fjorden.",
+        "Vi speider ut over den kalde fjorden.",
         "Vrakgods. Verdifullt vrakgods.",
       ],
     },
@@ -93,7 +93,7 @@ const SCENER: { nokkelord: string[]; scene: Scene }[] = [
         "radial-gradient(circle at 50% 40%, #101a24 0%, #080d13 70%, #020306 100%)",
       tekster: [
         "En sprukken skjerm flimrer i mørket …",
-        "Bjarne holder en likvake for elektronikken.",
+        "Vi holder en likvake for elektronikken.",
         "Data tapt. Erstatning funnet.",
       ],
     },
@@ -106,7 +106,7 @@ const STANDARD: Scene = {
   bakgrunn:
     "radial-gradient(circle at 50% 40%, #201408 0%, #0f0a04 70%, #040301 100%)",
   tekster: [
-    "Bjarne tenner et lys og blar i vilkårene han fant på selv …",
+    "Vi tenner et lys og blar i vilkårene vi fant på selv …",
     "Han sukker. Dypt.",
     "Et sted stiger et beløp i mørket.",
   ],

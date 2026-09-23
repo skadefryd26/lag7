@@ -1,5 +1,5 @@
 export type ChatTurn = {
-  role: "kunde" | "bjarne";
+  role: "kunde" | "agent";
   text: string;
 };
 
@@ -19,7 +19,7 @@ export type Valg = {
 };
 
 export type ChatResponse = {
-  // Bjarnes svar i chatten
+  // Agentens svar i chatten
   svar: string;
   // Konkrete tips/forslag for å makse utbetalingen
   tips: string[];
@@ -29,7 +29,7 @@ export type ChatResponse = {
   belop: number;
   // Endring fra forrige beløp (positiv = opp, negativ = ned)
   delta: number;
-  // Kort sur/selvsikker kommentar fra Bjarne
+  // Kort sur/selvsikker kommentar fra agenten
   kommentar: string;
   // Sannsynlighet (0-100) for at kunden blir tatt for svik
   svikSannsynlighet: number;
@@ -37,7 +37,7 @@ export type ChatResponse = {
   svikBegrunnelse: string;
   // Antatt straff i år, utledet av beløp × svik-sannsynlighet
   fengselAar: number;
-  // Bjarnes kommentar til straffen
+  // Agentens kommentar til straffen
   fengselKommentar: string;
   // Alternativer kunden kan klikke på for å forme skademeldingen videre
   valg: Valg[];

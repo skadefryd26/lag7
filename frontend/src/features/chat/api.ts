@@ -1,6 +1,6 @@
 import type { ChatResponse, ChatTurn } from "./types";
 
-export async function chatMedBjarne(
+export async function chatMedAgent(
   historikk: ChatTurn[],
   melding: string,
   forrigeBelop: number | undefined,
@@ -12,7 +12,9 @@ export async function chatMedBjarne(
   });
   if (!res.ok) {
     const body = (await res.json().catch(() => ({}))) as { error?: string };
-    throw new Error(body.error ?? `Bjarne sukket og feilet (${res.status}).`);
+    throw new Error(
+      body.error ?? `Agenten sukket og feilet (${res.status}).`,
+    );
   }
   return (await res.json()) as ChatResponse;
 }

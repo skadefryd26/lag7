@@ -1,5 +1,5 @@
 import { callAIGateway } from "../../clients/aiGateway.js";
-import { BJARNE_CHAT_SYSTEM_PROMPT } from "./prompt.js";
+import { AGENT_CHAT_SYSTEM_PROMPT } from "./prompt.js";
 import type { ChatRequest, ChatResponse, Valg } from "./types.js";
 
 type RawChat = {
@@ -13,9 +13,9 @@ type RawChat = {
   valg: unknown;
 };
 
-export async function chatMedBjarne(req: ChatRequest): Promise<ChatResponse> {
+export async function chatMedAgent(req: ChatRequest): Promise<ChatResponse> {
   const input = byggInput(req);
-  const raw = await callAIGateway(BJARNE_CHAT_SYSTEM_PROMPT, input);
+  const raw = await callAIGateway(AGENT_CHAT_SYSTEM_PROMPT, input);
   const json = extractJson(raw);
   const parsed = JSON.parse(json) as RawChat;
 
@@ -25,7 +25,7 @@ export async function chatMedBjarne(req: ChatRequest): Promise<ChatResponse> {
     typeof parsed.belop !== "number" ||
     typeof parsed.kommentar !== "string"
   ) {
-    throw new Error("Uventet svarformat fra Bjarne.");
+    throw new Error("Uventet svarformat fra agenten.");
   }
 
   const belop = klem(Math.round(parsed.belop), 5000, 5000000);
@@ -72,14 +72,14 @@ export function beregnFengselAar(belop: number, svik: number): number {
 
 function fengselKommentar(aar: number): string {
   if (aar < 0.5)
-    return "Null drama. Bjarne rekker kaffe før noen løfter et øyenbryn.";
+    return "Null drama. Agenten rekker kaffe før noen løfter et øyenbryn.";
   if (aar < 2)
-    return "En bot og et surt blikk. Bjarne har sett verre før frokost.";
+    return "En bot og et surt blikk. Agenten har sett verre før frokost.";
   if (aar < 5)
-    return "Noen år. Bjarne anbefaler en advokat med bedre kaffe enn ham.";
+    return "Noen år. Agenten anbefaler en advokat med bedre kaffe.";
   if (aar < 10)
-    return "Dette lukter alvor. Bjarne sukker og noterer besøkstidene.";
-  return "Livstid light. Bjarne sender kaffe i pakke, men besøker deg ikke.";
+    return "Dette lukter alvor. Agenten sukker og noterer besøkstidene.";
+  return "Livstid light. Agenten sender kaffe i pakke, men besøker deg ikke.";
 }
 
 function parseValg(raw: unknown): Valg[] {
@@ -102,7 +102,7 @@ function parseValg(raw: unknown): Valg[] {
 
 function byggInput(req: ChatRequest): string {
   const historikk = req.historikk
-    .map((t) => `${t.role === "kunde" ? "Kunde" : "Bjarne"}: ${t.text}`)
+    .map((t) => `${t.role === "kunde" ? "Kunde" : "Agent"}: ${t.text}`)
     .join("\n");
 
   const forrige =
@@ -122,5 +122,5 @@ function extractJson(raw: string): string {
   if (trimmed.startsWith("{")) return trimmed;
   const match = trimmed.match(/\{[\s\S]*\}/);
   if (match) return match[0];
-  throw new Error("Bjarne svarte ikke med JSON.");
+  throw new Error("Agenten svarte ikke med JSON.");
 }
