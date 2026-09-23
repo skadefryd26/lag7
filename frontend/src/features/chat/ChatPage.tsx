@@ -7,7 +7,9 @@ import {
   Container,
   Grid,
   Group,
+  MantineProvider,
   ScrollArea,
+  type MantineColorsTuple,
   Stack,
   Text,
   Textarea,
@@ -25,6 +27,20 @@ const kr = new Intl.NumberFormat("no-NO", {
   currency: "NOK",
   maximumFractionDigits: 0,
 });
+
+// Luguber fargepalett — mørk, bleik og litt blodig. Brukes bare på denne siden.
+const blood: MantineColorsTuple = [
+  "#f4dfe0",
+  "#e3b4b7",
+  "#d18a8e",
+  "#bd6165",
+  "#a53a3f",
+  "#8a262c",
+  "#701b21",
+  "#570f14",
+  "#3c070b",
+  "#220204",
+];
 
 // Et "drastisk" hopp: over 40 000 kr eller mer enn 25 % opp.
 function erStortHopp(delta: number, forrige: number): boolean {
@@ -85,22 +101,41 @@ export function ChatPage() {
   }
 
   return (
-    <Box style={{ position: "relative", minHeight: "100vh" }}>
-      <PengeRegn aktiv={regn} />
-      <Container size="lg" py={40}>
-        <Group gap="md" align="center" mb={28}>
-          <Avatar radius="xl" size={52} color="coffee" style={{ fontSize: 24 }}>
-            ☕
-          </Avatar>
-          <div>
-            <Title order={1} style={{ fontSize: 34, lineHeight: 1.05 }}>
-              Forsikringsplyndreren — chat
-            </Title>
-            <Text c="dimmed" size="sm" mt={2}>
-              Fortell hva som skjedde. Bjarne makser mens du snakker.
-            </Text>
-          </div>
-        </Group>
+    <MantineProvider
+      forceColorScheme="dark"
+      theme={{ colors: { blood }, primaryColor: "blood", primaryShade: 6 }}
+    >
+      <Box
+        style={{
+          position: "relative",
+          minHeight: "100vh",
+          background:
+            "radial-gradient(circle at 20% -10%, #2a0d12 0%, #0b0608 55%, #050406 100%)",
+        }}
+      >
+        <PengeRegn aktiv={regn} />
+        <Container size="lg" py={40}>
+          <Group gap="md" align="center" mb={28}>
+            <Avatar
+              radius="xl"
+              size={52}
+              color="blood"
+              style={{ fontSize: 24 }}
+            >
+              💀
+            </Avatar>
+            <div>
+              <Title
+                order={1}
+                style={{ fontSize: 34, lineHeight: 1.05, color: "#e7d9d6" }}
+              >
+                Bjarne Maks — chat
+              </Title>
+              <Text c="dimmed" size="sm" mt={2}>
+                Fortell hva som skjedde. Bjarne makser mens du snakker.
+              </Text>
+            </div>
+          </Group>
 
         <Grid gutter="lg" align="stretch">
           {/* VENSTRE: chatten */}
@@ -110,9 +145,9 @@ export function ChatPage() {
               radius={20}
               p="lg"
               style={{
-                background: "#fffdf8",
-                boxShadow: "var(--shadow-md)",
-                borderColor: "rgba(20,12,4,0.08)",
+                background: "#140d10",
+                boxShadow: "0 12px 40px rgba(0,0,0,0.55)",
+                borderColor: "rgba(255,255,255,0.06)",
                 display: "flex",
                 flexDirection: "column",
                 height: 560,
@@ -147,7 +182,7 @@ export function ChatPage() {
                 </Stack>
               </ScrollArea>
 
-              <Group gap="sm" mt="md" align="flex-end">
+              <Group gap="sm" mt="md" align="flex-end" className="chat-luguber-inputrow">
                 <Textarea
                   style={{ flex: 1 }}
                   placeholder="Skriv til Bjarne …"
@@ -165,7 +200,7 @@ export function ChatPage() {
                   radius={12}
                 />
                 <Button
-                  color="coffee"
+                  color="blood"
                   radius={12}
                   loading={mutation.isPending}
                   disabled={melding.trim().length === 0}
@@ -187,9 +222,9 @@ export function ChatPage() {
                 p="lg"
                 style={{
                   background:
-                    "linear-gradient(180deg, #fffdf8 0%, #faf3e8 100%)",
-                  boxShadow: "var(--shadow-md)",
-                  borderColor: "rgba(20,12,4,0.08)",
+                    "linear-gradient(180deg, #150e12 0%, #0d0709 100%)",
+                  boxShadow: "0 12px 40px rgba(0,0,0,0.55)",
+                  borderColor: "rgba(255,255,255,0.06)",
                 }}
               >
                 <Text size="xs" fw={700} c="dimmed" tt="uppercase" mb={6}>
@@ -213,9 +248,9 @@ export function ChatPage() {
                 radius={20}
                 p="lg"
                 style={{
-                  background: "#fffdf8",
-                  boxShadow: "var(--shadow-md)",
-                  borderColor: "rgba(20,12,4,0.08)",
+                  background: "#140d10",
+                  boxShadow: "0 12px 40px rgba(0,0,0,0.55)",
+                  borderColor: "rgba(255,255,255,0.06)",
                 }}
               >
                 <Group justify="space-between" align="baseline" mb={4}>
@@ -255,7 +290,8 @@ export function ChatPage() {
                       fontSize: 40,
                       fontWeight: 800,
                       lineHeight: 1.1,
-                      color: "#5f3f18",
+                      color: "#e2555f",
+                      textShadow: "0 0 16px rgba(226,85,95,0.35)",
                     }}
                   >
                     {kr.format(belop)}
@@ -280,8 +316,9 @@ export function ChatPage() {
           Parodi. Skadefryd 2026. Alt er oppdiktet — ingen ekte kunder, saker
           eller kaffekopper er skadet.
         </Text>
-      </Container>
-    </Box>
+        </Container>
+      </Box>
+    </MantineProvider>
   );
 }
 
@@ -306,15 +343,15 @@ function Boble({
           maxWidth: "80%",
           padding: "10px 14px",
           borderRadius: 14,
-          background: kunde ? "#845923" : "#faf5ec",
-          color: kunde ? "#faf1e6" : "inherit",
-          border: kunde ? "none" : "1px solid rgba(20,12,4,0.06)",
+          background: kunde ? "#4a141a" : "#1c1418",
+          color: kunde ? "#f3e4e2" : "#d9cdd0",
+          border: kunde ? "none" : "1px solid rgba(255,255,255,0.08)",
           lineHeight: 1.5,
           fontSize: 14,
         }}
       >
         {!kunde && (
-          <Text size="xs" fw={700} c="#845923" mb={6}>
+          <Text size="xs" fw={700} c="#c96b6f" mb={6}>
             Bjarne
           </Text>
         )}
@@ -322,7 +359,7 @@ function Boble({
 
         {harValg && (
           <Stack gap={6}>
-            <Text size="xs" fw={700} c="#845923">
+            <Text size="xs" fw={700} c="#c96b6f">
               Velg hva du vil legge til
             </Text>
             {valgListe.map((valg, i) => (
