@@ -80,11 +80,25 @@ li {
 /* Luguber innskrivingsfelt på chat-siden med Bjarne. */
 .chat-luguber-inputrow textarea {
   background-color: #140d10 !important;
-  border-color: rgba(255, 255, 255, 0.12) !important;
-  color: #e7d9d6 !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+  color: #f0e6e4 !important;
 }
 .chat-luguber-inputrow textarea::placeholder {
-  color: #6f6470 !important;
+  color: #9b8d94 !important;
+}
+
+/* Kontrast på den mørke chat-siden: Mantines «dimmed» er for svak mot
+   nesten-svart bakgrunn. Disse verdiene ligger over WCAG AA (4.5:1). */
+.luguber-side {
+  --mantine-color-dimmed: #b3a4a8;
+  --mantine-color-text: #ede2e0;
+}
+.luguber-side :is(h1, h2, h3, h4) {
+  color: #f2e7e5;
+}
+.luguber-side .bjarne-button:disabled {
+  background-color: #3a2228;
+  color: #c3b2b5;
 }
 
 @media (prefers-reduced-motion: reduce) {
