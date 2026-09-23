@@ -19,6 +19,7 @@ import { chatMedBjarne } from "./api";
 import type { ChatResponse, ChatTurn, Valg } from "./types";
 import { BelopGraf } from "./BelopGraf";
 import { PengeRegn } from "./PengeRegn";
+import { LuguberLoader } from "./LuguberLoader";
 
 const kr = new Intl.NumberFormat("no-NO", {
   style: "currency",
@@ -40,6 +41,7 @@ export function ChatPage() {
   const [belopHistorikk, setBelopHistorikk] = useState<number[]>([]);
   const [kommentar, setKommentar] = useState("");
   const [regn, setRegn] = useState(false);
+  const [sisteInnsendt, setSisteInnsendt] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const mutation = useMutation<ChatResponse, Error, string>({
@@ -80,6 +82,7 @@ export function ChatPage() {
   function send() {
     const m = melding.trim();
     if (!m || mutation.isPending) return;
+    setSisteInnsendt(m);
     setMelding("");
     mutation.mutate(m);
   }
@@ -131,13 +134,14 @@ export function ChatPage() {
                       key={i}
                       turn={t}
                       visValg={i === historikk.length - 1 && !mutation.isPending}
-                      onVelg={(valg) => mutation.mutate(valg.tekst)}
+                      onVelg={(valg) => {
+                        setSisteInnsendt(valg.tekst);
+                        mutation.mutate(valg.tekst);
+                      }}
                     />
                   ))}
                   {mutation.isPending && (
-                    <Text c="dimmed" size="sm" fs="italic" className="bjarne-sighing">
-                      Bjarne sukker og blar i vilkårene han fant på selv …
-                    </Text>
+                    <LuguberLoader sisteMelding={sisteInnsendt} />
                   )}
                   {mutation.isError && (
                     <Text c="red" size="sm">
