@@ -16,7 +16,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { chatMedBjarne } from "./api";
-import type { ChatResponse, ChatTurn } from "./types";
+import type { ChatResponse, ChatTurn, Valg } from "./types";
 import { BelopGraf } from "./BelopGraf";
 import { PengeRegn } from "./PengeRegn";
 
@@ -48,7 +48,7 @@ export function ChatPage() {
       setHistorikk((h) => [
         ...h,
         { role: "kunde", text: m },
-        { role: "bjarne", text: data.svar, tips: data.tips },
+        { role: "bjarne", text: data.svar, tips: data.tips, valg: data.valg },
       ]);
       setHero(data.heroforklaring);
       setKommentar(data.kommentar);
@@ -127,7 +127,12 @@ export function ChatPage() {
                     </Text>
                   )}
                   {historikk.map((t, i) => (
-                    <Boble key={i} turn={t} />
+                    <Boble
+                      key={i}
+                      turn={t}
+                      visValg={i === historikk.length - 1 && !mutation.isPending}
+                      onVelg={(valg) => mutation.mutate(valg.tekst)}
+                    />
                   ))}
                   {mutation.isPending && (
                     <Text c="dimmed" size="sm" fs="italic" className="bjarne-sighing">
@@ -280,8 +285,20 @@ export function ChatPage() {
   );
 }
 
-function Boble({ turn }: { turn: ChatTurn }) {
+function Boble({
+  turn,
+  visValg,
+  onVelg,
+}: {
+  turn: ChatTurn;
+  visValg: boolean;
+  onVelg: (valg: Valg) => void;
+}) {
   const kunde = turn.role === "kunde";
+  const valgListe = visValg ? (turn.valg ?? []) : [];
+  const harValg = valgListe.length > 0;
+  if (!kunde && !harValg) return null;
+
   return (
     <Group justify={kunde ? "flex-end" : "flex-start"} gap={6}>
       <Box
@@ -297,38 +314,45 @@ function Boble({ turn }: { turn: ChatTurn }) {
         }}
       >
         {!kunde && (
-          <Text size="xs" fw={700} c="#845923" mb={2}>
+          <Text size="xs" fw={700} c="#845923" mb={6}>
             Bjarne
           </Text>
         )}
-        {turn.text}
+        {kunde && turn.text}
 
-        {!kunde && turn.tips && turn.tips.length > 0 && (
-          <Box
-            mt={10}
-            p={10}
-            style={{
-              background: "#fffdf8",
-              border: "1px dashed rgba(132,89,35,0.35)",
-              borderRadius: 10,
-            }}
-          >
-            <Text size="xs" fw={700} c="#845923" mb={6}>
-              💡 Bjarnes maks-tips
+        {harValg && (
+          <Stack gap={6}>
+            <Text size="xs" fw={700} c="#845923">
+              Velg hva du vil legge til
             </Text>
-            <Stack gap={4}>
-              {turn.tips.map((tip, i) => (
-                <Group key={i} gap={6} align="flex-start" wrap="nowrap">
-                  <Text size="xs" fw={700} c="#845923" style={{ lineHeight: 1.5 }}>
-                    {i + 1}.
+            {valgListe.map((valg, i) => (
+              <Button
+                key={i}
+                variant="default"
+                radius={10}
+                size="xs"
+                justify="space-between"
+                onClick={() => onVelg(valg)}
+                rightSection={
+                  <Text
+                    size="xs"
+                    fw={700}
+                    c={valg.belop >= 0 ? "green" : "red"}
+                  >
+                    {valg.belop >= 0 ? "+" : "−"}
+                    {kr.format(Math.abs(valg.belop))}
                   </Text>
-                  <Text size="xs" style={{ lineHeight: 1.5 }}>
-                    {tip}
-                  </Text>
-                </Group>
-              ))}
-            </Stack>
-          </Box>
+                }
+                styles={{
+                  root: { height: "auto", padding: "8px 10px" },
+                  label: { whiteSpace: "normal", textAlign: "left" },
+                  inner: { justifyContent: "space-between", gap: 10 },
+                }}
+              >
+                {valg.tittel}
+              </Button>
+            ))}
+          </Stack>
         )}
       </Box>
     </Group>
