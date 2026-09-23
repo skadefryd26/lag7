@@ -4,7 +4,9 @@ import { sanitizeSvg } from "./sanitize.js";
 import type { SkisseResponse } from "./types.js";
 
 export async function tegnSkadeskisse(skade: string): Promise<SkisseResponse> {
-  const raw = await callAIGateway(SKISSE_SYSTEM_PROMPT, skade);
+  const raw = await callAIGateway(SKISSE_SYSTEM_PROMPT, skade, {
+    tenketid: "low",
+  });
   const json = extractJson(raw);
   const parsed = JSON.parse(json) as Partial<SkisseResponse>;
 
