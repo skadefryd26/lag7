@@ -7,7 +7,9 @@ import {
   Container,
   Grid,
   Group,
+  MantineProvider,
   ScrollArea,
+  type MantineColorsTuple,
   Stack,
   Text,
   Textarea,
@@ -27,6 +29,20 @@ const kr = new Intl.NumberFormat("no-NO", {
   maximumFractionDigits: 0,
 });
 
+// Luguber fargepalett — mørk, bleik og litt blodig. Brukes bare på denne siden.
+const blood: MantineColorsTuple = [
+  "#f4dfe0",
+  "#e3b4b7",
+  "#d18a8e",
+  "#bd6165",
+  "#a53a3f",
+  "#8a262c",
+  "#701b21",
+  "#570f14",
+  "#3c070b",
+  "#220204",
+];
+
 // Et "drastisk" hopp: over 40 000 kr eller mer enn 25 % opp.
 function erStortHopp(delta: number, forrige: number): boolean {
   if (delta <= 0) return false;
@@ -40,6 +56,10 @@ export function ChatPage() {
   const [belop, setBelop] = useState(0);
   const [belopHistorikk, setBelopHistorikk] = useState<number[]>([]);
   const [kommentar, setKommentar] = useState("");
+  const [svik, setSvik] = useState<number | null>(null);
+  const [svikBegrunnelse, setSvikBegrunnelse] = useState("");
+  const [fengselAar, setFengselAar] = useState<number | null>(null);
+  const [fengselKommentar, setFengselKommentar] = useState("");
   const [regn, setRegn] = useState(false);
   const [sisteInnsendt, setSisteInnsendt] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -54,6 +74,10 @@ export function ChatPage() {
       ]);
       setHero(data.heroforklaring);
       setKommentar(data.kommentar);
+      setSvik(data.svikSannsynlighet);
+      setSvikBegrunnelse(data.svikBegrunnelse);
+      setFengselAar(data.fengselAar);
+      setFengselKommentar(data.fengselKommentar);
 
       const forrige = belop;
       setBelop(data.belop);
@@ -88,22 +112,41 @@ export function ChatPage() {
   }
 
   return (
-    <Box style={{ position: "relative", minHeight: "100vh" }}>
-      <PengeRegn aktiv={regn} />
-      <Container size="lg" py={40}>
-        <Group gap="md" align="center" mb={28}>
-          <Avatar radius="xl" size={52} color="coffee" style={{ fontSize: 24 }}>
-            ☕
-          </Avatar>
-          <div>
-            <Title order={1} style={{ fontSize: 34, lineHeight: 1.05 }}>
-              Forsikringsplyndreren — chat
-            </Title>
-            <Text c="dimmed" size="sm" mt={2}>
-              Fortell hva som skjedde. Bjarne makser mens du snakker.
-            </Text>
-          </div>
-        </Group>
+    <MantineProvider
+      forceColorScheme="dark"
+      theme={{ colors: { blood }, primaryColor: "blood", primaryShade: 6 }}
+    >
+      <Box
+        style={{
+          position: "relative",
+          minHeight: "100vh",
+          background:
+            "radial-gradient(circle at 20% -10%, #2a0d12 0%, #0b0608 55%, #050406 100%)",
+        }}
+      >
+        <PengeRegn aktiv={regn} />
+        <Container size="lg" py={40}>
+          <Group gap="md" align="center" mb={28}>
+            <Avatar
+              radius="xl"
+              size={52}
+              color="blood"
+              style={{ fontSize: 24 }}
+            >
+              💀
+            </Avatar>
+            <div>
+              <Title
+                order={1}
+                style={{ fontSize: 34, lineHeight: 1.05, color: "#e7d9d6" }}
+              >
+                Bjarne Maks — chat
+              </Title>
+              <Text c="dimmed" size="sm" mt={2}>
+                Fortell hva som skjedde. Bjarne makser mens du snakker.
+              </Text>
+            </div>
+          </Group>
 
         <Grid gutter="lg" align="stretch">
           {/* VENSTRE: chatten */}
@@ -113,9 +156,9 @@ export function ChatPage() {
               radius={20}
               p="lg"
               style={{
-                background: "#fffdf8",
-                boxShadow: "var(--shadow-md)",
-                borderColor: "rgba(20,12,4,0.08)",
+                background: "#140d10",
+                boxShadow: "0 12px 40px rgba(0,0,0,0.55)",
+                borderColor: "rgba(255,255,255,0.06)",
                 display: "flex",
                 flexDirection: "column",
                 height: 560,
@@ -151,7 +194,7 @@ export function ChatPage() {
                 </Stack>
               </ScrollArea>
 
-              <Group gap="sm" mt="md" align="flex-end">
+              <Group gap="sm" mt="md" align="flex-end" className="chat-luguber-inputrow">
                 <Textarea
                   style={{ flex: 1 }}
                   placeholder="Skriv til Bjarne …"
@@ -169,7 +212,7 @@ export function ChatPage() {
                   radius={12}
                 />
                 <Button
-                  color="coffee"
+                  color="blood"
                   radius={12}
                   loading={mutation.isPending}
                   disabled={melding.trim().length === 0}
@@ -191,9 +234,9 @@ export function ChatPage() {
                 p="lg"
                 style={{
                   background:
-                    "linear-gradient(180deg, #fffdf8 0%, #faf3e8 100%)",
-                  boxShadow: "var(--shadow-md)",
-                  borderColor: "rgba(20,12,4,0.08)",
+                    "linear-gradient(180deg, #150e12 0%, #0d0709 100%)",
+                  boxShadow: "0 12px 40px rgba(0,0,0,0.55)",
+                  borderColor: "rgba(255,255,255,0.06)",
                 }}
               >
                 <Text size="xs" fw={700} c="dimmed" tt="uppercase" mb={6}>
@@ -217,9 +260,9 @@ export function ChatPage() {
                 radius={20}
                 p="lg"
                 style={{
-                  background: "#fffdf8",
-                  boxShadow: "var(--shadow-md)",
-                  borderColor: "rgba(20,12,4,0.08)",
+                  background: "#140d10",
+                  boxShadow: "0 12px 40px rgba(0,0,0,0.55)",
+                  borderColor: "rgba(255,255,255,0.06)",
                 }}
               >
                 <Group justify="space-between" align="baseline" mb={4}>
@@ -259,7 +302,8 @@ export function ChatPage() {
                       fontSize: 40,
                       fontWeight: 800,
                       lineHeight: 1.1,
-                      color: "#5f3f18",
+                      color: "#e2555f",
+                      textShadow: "0 0 16px rgba(226,85,95,0.35)",
                     }}
                   >
                     {kr.format(belop)}
@@ -276,6 +320,14 @@ export function ChatPage() {
                   </Text>
                 )}
               </Card>
+
+              {svik !== null && (
+                <SvikMeter score={svik} begrunnelse={svikBegrunnelse} />
+              )}
+
+              {fengselAar !== null && (
+                <FengselMeter aar={fengselAar} kommentar={fengselKommentar} />
+              )}
             </Stack>
           </Grid.Col>
         </Grid>
@@ -284,8 +336,168 @@ export function ChatPage() {
           Parodi. Skadefryd 2026. Alt er oppdiktet — ingen ekte kunder, saker
           eller kaffekopper er skadet.
         </Text>
-      </Container>
-    </Box>
+        </Container>
+      </Box>
+    </MantineProvider>
+  );
+}
+
+function svikNiva(score: number): { label: string; color: string; emoji: string } {
+  if (score <= 20) return { label: "Trygg havn", color: "#5aa06a", emoji: "🏴‍☠️" };
+  if (score <= 50) return { label: "Løftet øyenbryn", color: "#d3a15a", emoji: "🧐" };
+  if (score <= 80) return { label: "Telefonen ringer", color: "#d8663f", emoji: "☎️" };
+  return { label: "Politianmeldt før frokost", color: "#e2555f", emoji: "🚔" };
+}
+
+function MeterKort({ children }: { children: React.ReactNode }) {
+  return (
+    <Card
+      withBorder
+      radius={20}
+      p="lg"
+      style={{
+        background: "#140d10",
+        boxShadow: "0 12px 40px rgba(0,0,0,0.55)",
+        borderColor: "rgba(255,255,255,0.06)",
+      }}
+    >
+      {children}
+    </Card>
+  );
+}
+
+function SvikMeter({ score, begrunnelse }: { score: number; begrunnelse: string }) {
+  const niva = svikNiva(score);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <MeterKort>
+        <Group justify="space-between" align="center" mb={10}>
+          <Group gap={8}>
+            <Text style={{ fontSize: 20 }}>{niva.emoji}</Text>
+            <div>
+              <Text size="xs" fw={700} c="dimmed" tt="uppercase" style={{ letterSpacing: 1 }}>
+                Sannsynlighet for å bli tatt
+              </Text>
+              <Text fw={700} style={{ color: niva.color }}>
+                {niva.label}
+              </Text>
+            </div>
+          </Group>
+          <Text
+            fw={800}
+            className="tabular"
+            style={{ fontSize: 28, color: niva.color, lineHeight: 1 }}
+          >
+            {score}
+            <Text component="span" fw={600} size="sm" c="dimmed" ml={2}>
+              /100
+            </Text>
+          </Text>
+        </Group>
+        <Box
+          style={{
+            position: "relative",
+            height: 10,
+            borderRadius: 999,
+            background: "#2a1418",
+            overflow: "hidden",
+          }}
+        >
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${score}%` }}
+            transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              height: "100%",
+              background:
+                "linear-gradient(90deg, #5aa06a 0%, #d3a15a 45%, #d8663f 75%, #e2555f 100%)",
+            }}
+          />
+        </Box>
+        {begrunnelse && (
+          <Text size="sm" c="dimmed" mt={10} fs="italic">
+            {begrunnelse}
+          </Text>
+        )}
+      </MeterKort>
+    </motion.div>
+  );
+}
+
+function fengselNiva(aar: number): { label: string; color: string; emoji: string } {
+  if (aar < 0.5) return { label: "Fri som fuglen", color: "#5aa06a", emoji: "🕊️" };
+  if (aar < 2) return { label: "Bot og bedring", color: "#d3a15a", emoji: "💸" };
+  if (aar < 5) return { label: "Noen år på skyggesiden", color: "#d8663f", emoji: "⛓️" };
+  if (aar < 10) return { label: "Lang dom", color: "#e2555f", emoji: "🚔" };
+  return { label: "Livstid light", color: "#f06d76", emoji: "🔒" };
+}
+
+const FENGSEL_MAKS = 15;
+
+function FengselMeter({ aar, kommentar }: { aar: number; kommentar: string }) {
+  const niva = fengselNiva(aar);
+  const prosent = Math.min(100, (aar / FENGSEL_MAKS) * 100);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.28, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <MeterKort>
+        <Group justify="space-between" align="center" mb={10}>
+          <Group gap={8}>
+            <Text style={{ fontSize: 20 }}>{niva.emoji}</Text>
+            <div>
+              <Text size="xs" fw={700} c="dimmed" tt="uppercase" style={{ letterSpacing: 1 }}>
+                Antatt straff (beløp × svik)
+              </Text>
+              <Text fw={700} style={{ color: niva.color }}>
+                {niva.label}
+              </Text>
+            </div>
+          </Group>
+          <Text
+            fw={800}
+            className="tabular"
+            style={{ fontSize: 28, color: niva.color, lineHeight: 1 }}
+          >
+            {aar.toLocaleString("no-NO")}
+            <Text component="span" fw={600} size="sm" c="dimmed" ml={4}>
+              år
+            </Text>
+          </Text>
+        </Group>
+        <Box
+          style={{
+            position: "relative",
+            height: 10,
+            borderRadius: 999,
+            background: "#2a1418",
+            overflow: "hidden",
+          }}
+        >
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${prosent}%` }}
+            transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              height: "100%",
+              background:
+                "linear-gradient(90deg, #5aa06a 0%, #d3a15a 40%, #d8663f 70%, #f06d76 100%)",
+            }}
+          />
+        </Box>
+        {kommentar && (
+          <Text size="sm" c="dimmed" mt={10} fs="italic">
+            {kommentar}
+          </Text>
+        )}
+      </MeterKort>
+    </motion.div>
   );
 }
 
@@ -310,15 +522,15 @@ function Boble({
           maxWidth: "80%",
           padding: "10px 14px",
           borderRadius: 14,
-          background: kunde ? "#845923" : "#faf5ec",
-          color: kunde ? "#faf1e6" : "inherit",
-          border: kunde ? "none" : "1px solid rgba(20,12,4,0.06)",
+          background: kunde ? "#4a141a" : "#1c1418",
+          color: kunde ? "#f3e4e2" : "#d9cdd0",
+          border: kunde ? "none" : "1px solid rgba(255,255,255,0.08)",
           lineHeight: 1.5,
           fontSize: 14,
         }}
       >
         {!kunde && (
-          <Text size="xs" fw={700} c="#845923" mb={6}>
+          <Text size="xs" fw={700} c="#c96b6f" mb={6}>
             Bjarne
           </Text>
         )}
@@ -326,7 +538,7 @@ function Boble({
 
         {harValg && (
           <Stack gap={6}>
-            <Text size="xs" fw={700} c="#845923">
+            <Text size="xs" fw={700} c="#c96b6f">
               Velg hva du vil legge til
             </Text>
             {valgListe.map((valg, i) => (

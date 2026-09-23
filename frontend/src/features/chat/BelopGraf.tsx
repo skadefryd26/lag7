@@ -80,7 +80,7 @@ export function BelopGraf({ verdier, bredde = 320, hoyde = 120 }: Props) {
         cy={siste.y}
         r={5}
         fill={farge}
-        stroke="#fffdf8"
+        stroke="#140d10"
         strokeWidth={2}
       />
     </svg>
