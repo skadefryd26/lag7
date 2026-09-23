@@ -1,4 +1,4 @@
-# Bjarne Maks
+# Forsikringsplyndreren
 
 ## Idé
 En parodi-versjon av «Din side» hos et forsikringsselskap, der AI-agenten **Bjarne** hjelper kunden å makse erstatningen for et skadescenario. Ser ut som en ekte kundetjeneste. Er en oppdiktet demo laget for Skadefryd 2026.
@@ -26,7 +26,7 @@ En «kunde» som beskriver skaden sin i et tekstfelt og får skamløst nyttige (
 - **Utprøving og finpuss** — teste, notere hva som ikke funker, foreslå det neste morsomme.
 
 ## Beslutninger tatt
-- Ikke Gjensidige-branding i UI. «Bjarne Maks»-parodi.
+- Ikke Gjensidige-branding i UI. «Forsikringsplyndreren»-parodi.
 - Ingen ekte data. Alt er oppdiktet.
 - Frontend: React + Vite + TypeScript + Mantine + TanStack Router + TanStack Query.
 - Backend: Node.js + Express + TypeScript.

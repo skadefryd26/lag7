@@ -1,4 +1,4 @@
-# Startprompt: Bjarne Maks
+# Startprompt: Forsikringsplyndreren
 
 Vi lager en prototype på en webapplikasjon som ser ut som «Din side» i et forsikringsselskap, men er en parodi. Brukeren beskriver et skadescenario og AI-agenten **Bjarne** hjelper dem med skamløst nyttige, oppdiktede tips for å «makse» erstatningen, sammen med et helt oppdiktet beløp og en sur, selvsikker kommentar.
 
@@ -11,7 +11,7 @@ Formen er ikke chat. Det er ett skjema, én knapp, ett svar med tydelig struktur
 
 ## Første versjon
 1. Én side (`/`) med:
-   - Tittel og undertittel med attitude («Bjarne Maks — vi henter deg det du fortjener»).
+   - Tittel og undertittel med attitude («Forsikringsplyndreren — vi henter skatten du fortjener»).
    - Et Mantine-`Textarea` med label «Hva skjedde?» og placeholder.
    - En Mantine-`Button` «Maks det».
    - Et responsområde som viser tre tips, et oppdiktet beløp i kroner, og en Bjarne-kommentar.
