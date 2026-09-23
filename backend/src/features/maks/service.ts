@@ -10,10 +10,16 @@ export async function maksErstatning(skade: string): Promise<MaksResponse> {
     !Array.isArray(parsed.tips) ||
     parsed.tips.length === 0 ||
     typeof parsed.belop !== "number" ||
-    typeof parsed.kommentar !== "string"
+    typeof parsed.kommentar !== "string" ||
+    typeof parsed.svikSannsynlighet !== "number" ||
+    typeof parsed.svikBegrunnelse !== "string"
   ) {
     throw new Error("Uventet svarformat fra Bjarne.");
   }
+  parsed.svikSannsynlighet = Math.max(
+    0,
+    Math.min(100, Math.round(parsed.svikSannsynlighet)),
+  );
   return parsed;
 }
 

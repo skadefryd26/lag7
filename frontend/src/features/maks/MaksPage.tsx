@@ -264,6 +264,11 @@ function BjarneSvar({ data }: { data: MaksResponse }) {
           ))}
         </Stack>
 
+        <SvikMeter
+          score={data.svikSannsynlighet}
+          begrunnelse={data.svikBegrunnelse}
+        />
+
         <Card
           radius={14}
           p="md"
@@ -278,5 +283,107 @@ function BjarneSvar({ data }: { data: MaksResponse }) {
         </Card>
       </Stack>
     </Card>
+  );
+}
+
+function svikNiva(score: number): {
+  label: string;
+  color: string;
+  emoji: string;
+} {
+  if (score <= 20)
+    return { label: "Trygg havn", color: "#4a7c59", emoji: "🏴‍☠️" };
+  if (score <= 50)
+    return { label: "Løftet øyenbryn", color: "#c39150", emoji: "🧐" };
+  if (score <= 80)
+    return { label: "Telefonen ringer", color: "#c25c3a", emoji: "☎️" };
+  return { label: "Politianmeldt før frokost", color: "#a83232", emoji: "🚔" };
+}
+
+function SvikMeter({
+  score,
+  begrunnelse,
+}: {
+  score: number;
+  begrunnelse: string;
+}) {
+  const niva = svikNiva(score);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.28,
+        delay: 0.32,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+    >
+      <Box
+        style={{
+          padding: 16,
+          borderRadius: 16,
+          background: "#fffdf8",
+          border: "1px solid rgba(20,12,4,0.08)",
+          boxShadow: "var(--shadow-sm)",
+        }}
+      >
+        <Group justify="space-between" align="center" mb={10}>
+          <Group gap={8}>
+            <Text style={{ fontSize: 20 }}>{niva.emoji}</Text>
+            <div>
+              <Text size="xs" c="dimmed" tt="uppercase" style={{ letterSpacing: 1 }}>
+                Sannsynlighet for å bli tatt
+              </Text>
+              <Text fw={700} style={{ color: niva.color }}>
+                {niva.label}
+              </Text>
+            </div>
+          </Group>
+          <Text
+            fw={800}
+            className="tabular"
+            style={{ fontSize: 28, color: niva.color, lineHeight: 1 }}
+          >
+            {score}
+            <Text
+              component="span"
+              fw={600}
+              size="sm"
+              c="dimmed"
+              ml={2}
+            >
+              /100
+            </Text>
+          </Text>
+        </Group>
+        <Box
+          style={{
+            position: "relative",
+            height: 10,
+            borderRadius: 999,
+            background: "#f0e4d1",
+            overflow: "hidden",
+          }}
+        >
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${score}%` }}
+            transition={{
+              duration: 0.9,
+              delay: 0.4,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            style={{
+              height: "100%",
+              background: `linear-gradient(90deg, #4a7c59 0%, #c39150 45%, #c25c3a 75%, #a83232 100%)`,
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.25)",
+            }}
+          />
+        </Box>
+        <Text size="sm" c="dimmed" mt={10} fs="italic">
+          {begrunnelse}
+        </Text>
+      </Box>
+    </motion.div>
   );
 }

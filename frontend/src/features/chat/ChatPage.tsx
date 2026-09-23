@@ -94,7 +94,7 @@ export function ChatPage() {
           </Avatar>
           <div>
             <Title order={1} style={{ fontSize: 34, lineHeight: 1.05 }}>
-              Bjarne Maks — chat
+              Forsikringsplyndreren — chat
             </Title>
             <Text c="dimmed" size="sm" mt={2}>
               Fortell hva som skjedde. Bjarne makser mens du snakker.
