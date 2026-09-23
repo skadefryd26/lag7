@@ -55,6 +55,10 @@ export function ChatPage() {
   const [belop, setBelop] = useState(0);
   const [belopHistorikk, setBelopHistorikk] = useState<number[]>([]);
   const [kommentar, setKommentar] = useState("");
+  const [svik, setSvik] = useState<number | null>(null);
+  const [svikBegrunnelse, setSvikBegrunnelse] = useState("");
+  const [fengselAar, setFengselAar] = useState<number | null>(null);
+  const [fengselKommentar, setFengselKommentar] = useState("");
   const [regn, setRegn] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -68,6 +72,10 @@ export function ChatPage() {
       ]);
       setHero(data.heroforklaring);
       setKommentar(data.kommentar);
+      setSvik(data.svikSannsynlighet);
+      setSvikBegrunnelse(data.svikBegrunnelse);
+      setFengselAar(data.fengselAar);
+      setFengselKommentar(data.fengselKommentar);
 
       const forrige = belop;
       setBelop(data.belop);
@@ -308,6 +316,14 @@ export function ChatPage() {
                   </Text>
                 )}
               </Card>
+
+              {svik !== null && (
+                <SvikMeter score={svik} begrunnelse={svikBegrunnelse} />
+              )}
+
+              {fengselAar !== null && (
+                <FengselMeter aar={fengselAar} kommentar={fengselKommentar} />
+              )}
             </Stack>
           </Grid.Col>
         </Grid>
@@ -319,6 +335,165 @@ export function ChatPage() {
         </Container>
       </Box>
     </MantineProvider>
+  );
+}
+
+function svikNiva(score: number): { label: string; color: string; emoji: string } {
+  if (score <= 20) return { label: "Trygg havn", color: "#5aa06a", emoji: "🏴‍☠️" };
+  if (score <= 50) return { label: "Løftet øyenbryn", color: "#d3a15a", emoji: "🧐" };
+  if (score <= 80) return { label: "Telefonen ringer", color: "#d8663f", emoji: "☎️" };
+  return { label: "Politianmeldt før frokost", color: "#e2555f", emoji: "🚔" };
+}
+
+function MeterKort({ children }: { children: React.ReactNode }) {
+  return (
+    <Card
+      withBorder
+      radius={20}
+      p="lg"
+      style={{
+        background: "#140d10",
+        boxShadow: "0 12px 40px rgba(0,0,0,0.55)",
+        borderColor: "rgba(255,255,255,0.06)",
+      }}
+    >
+      {children}
+    </Card>
+  );
+}
+
+function SvikMeter({ score, begrunnelse }: { score: number; begrunnelse: string }) {
+  const niva = svikNiva(score);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <MeterKort>
+        <Group justify="space-between" align="center" mb={10}>
+          <Group gap={8}>
+            <Text style={{ fontSize: 20 }}>{niva.emoji}</Text>
+            <div>
+              <Text size="xs" fw={700} c="dimmed" tt="uppercase" style={{ letterSpacing: 1 }}>
+                Sannsynlighet for å bli tatt
+              </Text>
+              <Text fw={700} style={{ color: niva.color }}>
+                {niva.label}
+              </Text>
+            </div>
+          </Group>
+          <Text
+            fw={800}
+            className="tabular"
+            style={{ fontSize: 28, color: niva.color, lineHeight: 1 }}
+          >
+            {score}
+            <Text component="span" fw={600} size="sm" c="dimmed" ml={2}>
+              /100
+            </Text>
+          </Text>
+        </Group>
+        <Box
+          style={{
+            position: "relative",
+            height: 10,
+            borderRadius: 999,
+            background: "#2a1418",
+            overflow: "hidden",
+          }}
+        >
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${score}%` }}
+            transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              height: "100%",
+              background:
+                "linear-gradient(90deg, #5aa06a 0%, #d3a15a 45%, #d8663f 75%, #e2555f 100%)",
+            }}
+          />
+        </Box>
+        {begrunnelse && (
+          <Text size="sm" c="dimmed" mt={10} fs="italic">
+            {begrunnelse}
+          </Text>
+        )}
+      </MeterKort>
+    </motion.div>
+  );
+}
+
+function fengselNiva(aar: number): { label: string; color: string; emoji: string } {
+  if (aar < 0.5) return { label: "Fri som fuglen", color: "#5aa06a", emoji: "🕊️" };
+  if (aar < 2) return { label: "Bot og bedring", color: "#d3a15a", emoji: "💸" };
+  if (aar < 5) return { label: "Noen år på skyggesiden", color: "#d8663f", emoji: "⛓️" };
+  if (aar < 10) return { label: "Lang dom", color: "#e2555f", emoji: "🚔" };
+  return { label: "Livstid light", color: "#f06d76", emoji: "🔒" };
+}
+
+const FENGSEL_MAKS = 15;
+
+function FengselMeter({ aar, kommentar }: { aar: number; kommentar: string }) {
+  const niva = fengselNiva(aar);
+  const prosent = Math.min(100, (aar / FENGSEL_MAKS) * 100);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.28, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <MeterKort>
+        <Group justify="space-between" align="center" mb={10}>
+          <Group gap={8}>
+            <Text style={{ fontSize: 20 }}>{niva.emoji}</Text>
+            <div>
+              <Text size="xs" fw={700} c="dimmed" tt="uppercase" style={{ letterSpacing: 1 }}>
+                Antatt straff (beløp × svik)
+              </Text>
+              <Text fw={700} style={{ color: niva.color }}>
+                {niva.label}
+              </Text>
+            </div>
+          </Group>
+          <Text
+            fw={800}
+            className="tabular"
+            style={{ fontSize: 28, color: niva.color, lineHeight: 1 }}
+          >
+            {aar.toLocaleString("no-NO")}
+            <Text component="span" fw={600} size="sm" c="dimmed" ml={4}>
+              år
+            </Text>
+          </Text>
+        </Group>
+        <Box
+          style={{
+            position: "relative",
+            height: 10,
+            borderRadius: 999,
+            background: "#2a1418",
+            overflow: "hidden",
+          }}
+        >
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${prosent}%` }}
+            transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              height: "100%",
+              background:
+                "linear-gradient(90deg, #5aa06a 0%, #d3a15a 40%, #d8663f 70%, #f06d76 100%)",
+            }}
+          />
+        </Box>
+        {kommentar && (
+          <Text size="sm" c="dimmed" mt={10} fs="italic">
+            {kommentar}
+          </Text>
+        )}
+      </MeterKort>
+    </motion.div>
   );
 }
 

@@ -31,6 +31,14 @@ export type ChatResponse = {
   delta: number;
   // Kort sur/selvsikker kommentar fra Bjarne
   kommentar: string;
+  // Sannsynlighet (0-100) for at kunden blir tatt for svik
+  svikSannsynlighet: number;
+  // Kort begrunnelse for svik-sannsynligheten
+  svikBegrunnelse: string;
+  // Antatt straff i år, utledet av beløp × svik-sannsynlighet
+  fengselAar: number;
+  // Bjarnes kommentar til straffen
+  fengselKommentar: string;
   // Alternativer kunden kan klikke på for å forme skademeldingen videre
   valg: Valg[];
 };

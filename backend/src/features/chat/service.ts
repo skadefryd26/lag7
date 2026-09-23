@@ -8,6 +8,8 @@ type RawChat = {
   heroforklaring: string;
   belop: number;
   kommentar: string;
+  svikSannsynlighet: number;
+  svikBegrunnelse: string;
   valg: unknown;
 };
 
@@ -30,6 +32,17 @@ export async function chatMedBjarne(req: ChatRequest): Promise<ChatResponse> {
   const forrige =
     typeof req.forrigeBelop === "number" ? req.forrigeBelop : belop;
 
+  const svikSannsynlighet = klem(
+    Math.round(
+      typeof parsed.svikSannsynlighet === "number"
+        ? parsed.svikSannsynlighet
+        : 0,
+    ),
+    0,
+    100,
+  );
+  const fengselAar = beregnFengselAar(belop, svikSannsynlighet);
+
   return {
     svar: parsed.svar,
     tips: Array.isArray(parsed.tips)
@@ -39,8 +52,34 @@ export async function chatMedBjarne(req: ChatRequest): Promise<ChatResponse> {
     belop,
     delta: belop - forrige,
     kommentar: parsed.kommentar,
+    svikSannsynlighet,
+    svikBegrunnelse:
+      typeof parsed.svikBegrunnelse === "string" ? parsed.svikBegrunnelse : "",
+    fengselAar,
+    fengselKommentar: fengselKommentar(fengselAar),
     valg: parseValg(parsed.valg),
   };
+}
+
+// Korrelasjon mellom utbetaling og svik-sannsynlighet, uttrykt i "år bak lås".
+// Begge må være høye for lang straff. Oppdiktet parodi-formel.
+export function beregnFengselAar(belop: number, svik: number): number {
+  const belopFaktor = Math.min(1, Math.max(0, belop) / 5_000_000);
+  const svikFaktor = Math.min(1, Math.max(0, svik) / 100);
+  const aar = 15 * belopFaktor * svikFaktor;
+  return Math.round(aar * 10) / 10;
+}
+
+function fengselKommentar(aar: number): string {
+  if (aar < 0.5)
+    return "Null drama. Bjarne rekker kaffe før noen løfter et øyenbryn.";
+  if (aar < 2)
+    return "En bot og et surt blikk. Bjarne har sett verre før frokost.";
+  if (aar < 5)
+    return "Noen år. Bjarne anbefaler en advokat med bedre kaffe enn ham.";
+  if (aar < 10)
+    return "Dette lukter alvor. Bjarne sukker og noterer besøkstidene.";
+  return "Livstid light. Bjarne sender kaffe i pakke, men besøker deg ikke.";
 }
 
 function parseValg(raw: unknown): Valg[] {

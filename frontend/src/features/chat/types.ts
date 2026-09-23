@@ -18,5 +18,9 @@ export type ChatResponse = {
   belop: number;
   delta: number;
   kommentar: string;
+  svikSannsynlighet: number;
+  svikBegrunnelse: string;
+  fengselAar: number;
+  fengselKommentar: string;
   valg: Valg[];
 };
