@@ -67,10 +67,10 @@ export function MaksPage() {
             </Avatar>
             <div>
               <Title order={1} style={{ fontSize: 40, lineHeight: 1.05 }}>
-                Bjarne Maks
+                Forsikringsplyndreren
               </Title>
               <Text c="dimmed" size="sm" mt={4}>
-                Vi henter deg det du fortjener. Og litt til.
+                Vi henter skatten du fortjener.
               </Text>
             </div>
           </Group>
