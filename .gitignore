@@ -13,6 +13,11 @@
 node_modules/
 dist/
 coverage/
+.vite/
+*.tsbuildinfo
+
+# tsc -b emits stray .js next to .tsx source when run without --noEmit
+frontend/src/**/*.js
 
 # Skjermbildet scripts/sjekk-appen.mjs legger igjen
 sjekk-appen.png

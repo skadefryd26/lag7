@@ -77,6 +77,16 @@ li {
   animation: bjarne-sigh 1400ms var(--ease-in-out) infinite;
 }
 
+/* Luguber innskrivingsfelt på chat-siden med Bjarne. */
+.chat-luguber-inputrow textarea {
+  background-color: #140d10 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #e7d9d6 !important;
+}
+.chat-luguber-inputrow textarea::placeholder {
+  color: #6f6470 !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

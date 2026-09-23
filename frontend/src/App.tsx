@@ -1,5 +1,5 @@
-import { MaksPage } from "./features/maks/MaksPage";
+import { ChatPage } from "./features/chat/ChatPage";
 
 export function App() {
-  return <MaksPage />;
+  return <ChatPage />;
 }
