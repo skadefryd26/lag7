@@ -1,7 +1,14 @@
+export type Valg = {
+  tittel: string;
+  tekst: string;
+  belop: number;
+};
+
 export type ChatTurn = {
   role: "kunde" | "bjarne";
   text: string;
   tips?: string[];
+  valg?: Valg[];
 };
 
 export type ChatResponse = {
@@ -11,4 +18,5 @@ export type ChatResponse = {
   belop: number;
   delta: number;
   kommentar: string;
+  valg: Valg[];
 };

@@ -1,6 +1,6 @@
 import { callAIGateway } from "../../clients/aiGateway.js";
 import { BJARNE_CHAT_SYSTEM_PROMPT } from "./prompt.js";
-import type { ChatRequest, ChatResponse } from "./types.js";
+import type { ChatRequest, ChatResponse, Valg } from "./types.js";
 
 type RawChat = {
   svar: string;
@@ -8,6 +8,7 @@ type RawChat = {
   heroforklaring: string;
   belop: number;
   kommentar: string;
+  valg: unknown;
 };
 
 export async function chatMedBjarne(req: ChatRequest): Promise<ChatResponse> {
@@ -38,7 +39,26 @@ export async function chatMedBjarne(req: ChatRequest): Promise<ChatResponse> {
     belop,
     delta: belop - forrige,
     kommentar: parsed.kommentar,
+    valg: parseValg(parsed.valg),
   };
+}
+
+function parseValg(raw: unknown): Valg[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter(
+      (v): v is Valg =>
+        !!v &&
+        typeof (v as Valg).tittel === "string" &&
+        typeof (v as Valg).tekst === "string" &&
+        typeof (v as Valg).belop === "number",
+    )
+    .slice(0, 4)
+    .map((v) => ({
+      tittel: v.tittel,
+      tekst: v.tekst,
+      belop: klem(Math.round(v.belop), -500000, 2000000),
+    }));
 }
 
 function byggInput(req: ChatRequest): string {
